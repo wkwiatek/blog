@@ -49,7 +49,7 @@ Auth0 also provides **Single Log Out**. The ability for you to log out of one of
 
 There are so many platforms currently that requires some form of registration to have access to. According to a report by [Web Hosting Buzz Survey](http://www.webhostingbuzz.com/blog/2013/03/21/whos-sharing-what/), more than 80 percent of users are bothered about creating new accounts on websites. So, providing social login to your apps will increase the number of registrations on your platform.
 
-Auth0 supports 30+ social providers: Facebook, Twitter, Google, Yahoo,Windows Live, LinkedIn, GitHub, PayPal, Amazon, vKontakte,Yandex, 37signals, Box, Salesforce, Salesforce (sandbox), Salesforce Community, Fitbit, Baidu, RenRen, Weibo, AOL, Shopify, WordPress,Dwolla, miiCard, Yammer, SoundCloud, Instagram, The City, The City (sandbox), Planning Center, Evernote, Evernote (sandbox), and Exact. If any of the social platform you need isn't listed here, Auth0 provides the ability to add new custom platforms.
+Auth0 supports 30+ social providers: Facebook, Twitter, Google, Yahoo, Windows Live, LinkedIn, GitHub, PayPal, Amazon, vKontakte, Yandex, 37signals, Box, Salesforce, Salesforce (sandbox), Salesforce Community, Fitbit, Baidu, RenRen, Weibo, AOL, Shopify, WordPress, Dwolla, miiCard, Yammer, SoundCloud, Instagram, The City, The City (sandbox), Planning Center, Evernote, Evernote (sandbox), and Exact. If any of the social platform you need isn't listed here, Auth0 provides the ability to add new custom platforms.
 
 ### 3 - Fingerprint Authentication
 
@@ -57,17 +57,18 @@ Users are always faced with the challenge of remembering a number of different p
 
 <img src="https://auth0.com/learn/wp-content/uploads/2016/04/passwordless-hero.png" alt="Fingerprint Authentication with TouchID" />
 
-
 ### 4 - Multi-factor authentication
 
-Several applications suffer different level of authentication attacks. One way to eradicate such attacks is to require users to present more than one piece of identifying information. Auth0 multi-factor authentication is a method of verifying users which requires them to provide more than just username and password. It provides a second layer of security to user log-ins and transactions.
+Several applications suffer different level of authentication attacks. One way to eradicate such attacks is to require users to present more than one piece of identifying information. **Auth0** multi-factor authentication is a method of verifying users which requires them to provide more than just username and password. It provides a second layer of security to user log-ins and transactions.
 
 Why use Auth0 Multi-factor Authentication?
 
-* Easy to use - Auth0 Multi-factor Authentication is simple to setup and use. Find out more [here](https://auth0.com/docs/multifactor-authentication)
-* Scalable - Auth0 Multi-factor Authentication harnesses the power of the cloud, hence supporting high volume critical scenarios
-* Always protected - Auth0 Multi-Factor Authentication provides strong authentication using the highest industry standards
-* Reliable - 99.98% uptime guarantee of Auth0 Multi-factor Authentication
+* **Easy to use** - Auth0 Multi-factor Authentication is simple to setup and use. Find out more [here](https://auth0.com/docs/multifactor-authentication)
+* **Scalable** - Auth0 Multi-factor Authentication harnesses the power of the cloud, hence supporting high volume critical scenarios
+* **Always protected** - Auth0 Multi-Factor Authentication provides strong authentication using the highest industry standards
+* **Reliable** - 99.98% uptime guarantee of Auth0 Multi-factor Authentication
+
+**Auth0** provides [2-Factor Authentication](https://auth0.com/learn/two-factor-authentication/) with **Google Authenticator** and **Duo** out of the box.
 
 ### 5 - Passwordless Authentication
 
@@ -93,12 +94,14 @@ You can start experimenting with **webtasks** by creating a free Auth0 account b
 
 ### 7 - Technical Support
 
-**Auth0** provides [libraries](https://github.com/auth0/) and [docs](https://auth0.com/docs) that enables developers to set up Authentication and Authorization in their apps within minutes. We support client-platforms: Vanilla JS, React, EmberJS and AngularJS, server-platforms: PHP, Nodejs, Ruby, Golang, Java, Python, .NET, Laravel, Wordpress, Joomla and Sharepoint.
+**Auth0** provides [libraries](https://github.com/auth0/) and [docs](https://auth0.com/docs) that enables developers to set up Authentication and Authorization in their apps within minutes. We support client-platforms: Vanilla JS, React, EmberJS and AngularJS, server-platforms: PHP, Nodejs, Ruby, Golang, Java, Python, .NET, Laravel, Wordpress, Joomla, Sharepoint and mobile-platforms: Android, iOs-objc.
 
 **Auth0** is equipped with a great technical support team that's available to answer your questions and concerns about using any of the tools we provide.
 
 
 ## What people are saying about Auth0
+
+"Auth0 was the only SaaS platform we looked at because it was clear that it was outstanding. Honestly" - David Bernick, Harvard Medical School
 
 "We took a strategic bet on Auth0 by using their sophisticated identity infrastructure, rather than building it ourselves." - James Gardner, SVP of Product at Mindjet
 
