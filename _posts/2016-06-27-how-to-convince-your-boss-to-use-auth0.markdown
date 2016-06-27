@@ -43,6 +43,7 @@ You can enable Single Sign On for your corporate applications like Salesforce, D
 Implementing enterprise SSO is one of the easiest ways to take your SaaS upmarket and grow your revenue. Enabling enterprise clients to allow their employees to login to your application with their company details is likely a necessity for a potential enterprise customer to choose your SaaS. Implementing SAML authentication in Auth0 is as easy as adding a few lines of code and adding your SAML identity provider information into the dashboard like so:
 
 <iframe src="//fast.wistia.net/embed/iframe/2xrll0d056" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="640" height="400"></iframe>
+
 <script src="//fast.wistia.net/assets/external/E-v1.js" async></script>
 
 What if your application is not in the list of our pre-integrated apps? No problem! We also support the main industry standards such as SAML, WS-Fed, and OAuth 2.0 so you can hook any third-party application that you need.
