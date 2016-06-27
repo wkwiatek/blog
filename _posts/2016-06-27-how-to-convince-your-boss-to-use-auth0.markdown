@@ -44,6 +44,9 @@ Implementing enterprise SSO is one of the easiest ways to take your SaaS upmarke
 
 <iframe src="//fast.wistia.net/embed/iframe/2xrll0d056" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="640" height="400"></iframe>
 
+[![Single Sign On](https://cloud.githubusercontent.com/assets/2946769/16379234/3f1d37d0-3c68-11e6-80a6-c0efdaf72db5.png)](http://fast.wistia.net/embed/iframe/2xrll0d056)
+
+
 <script src="//fast.wistia.net/assets/external/E-v1.js" async></script>
 
 What if your application is not in the list of our pre-integrated apps? No problem! We also support the main industry standards such as SAML, WS-Fed, and OAuth 2.0 so you can hook any third-party application that you need.
