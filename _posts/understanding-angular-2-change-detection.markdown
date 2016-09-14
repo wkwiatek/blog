@@ -1,7 +1,34 @@
-# Understanding Angular 2 change detection
+---
+layout: post
+title: "Understanding Angular 2 change detection"
+description: "Angular 2 introduced new change detection system which makes apps far faster. Eventually the performance can be tweaked."
+date: 2016-09-14 10:00
+author:
+  name: "Wojciech Kwiatek"
+  url: "https://twitter.com/WojciechKwiatek"
+  mail: "wojtek.kwiatek@gmail.com"
+  avatar: "https://en.gravatar.com/userimage/102277541/a28d70be6ae2b9389db9ad815cab510e.png?size=200"
+design:
+  bg_color: "#171717"
+  image: ""
+tags:
+- angular2
+- angularjs
+- change detection
+- performance
+- immutable
+related:
+-
+-
+-
 
-## TL;DR
-Angular 2 introduces reinvented change detection system which drops off digest cycles in favor of one way flow. Additionally it can be controlled now to take most of the framework's performance.
+---
+
+---
+
+**TL;DR** Angular 2 introduces reinvented change detection system which drops off digest cycles in favor of one way flow. Additionally it can be controlled now to take most of the framework's performance.
+
+---
 
 ## Introduction to change detection
 Angular 2 is somewhere near the final release. You've probably heard of some important changes due to the major version bump - its completely rewritten core, TypeScript as the language of choice, reinvented forms, RxJS, completely new router etc. But the most valuable think in my opinion was the redesign of the core change detection system. As you remember digest loop from AngularJS aka Angular 1 - the performance was the issue. Now it's not.
@@ -162,4 +189,4 @@ How can we build app to make most performant one? With Angular 2 is actually qui
 One of the big advantages of using more strict change detection is the performance gain. Angular is meant to be used for rather big applications which can end up with handling a lot of dynamic data. What we really did there is taking the responsibility from the Angular to the programmer. By default every change should be reflected on the UI as Angular takes care of that but the price is the performance. Immutable or reactive code is harder to write but easier to maintain and reason about. The choice is your.
 
 ### Eventually Angular can be tweaked
-The good is we eventually have a choice. In Angular 1 it was impossible to reach. The was some level you had to use React or other library to render UI instead of Angular templates as it was mainly too slow for greater amount of dynamic data. Now you have a complete solution with much more control over the internal behavior. However this one with combination of other changes made to Angular 2 makes the learning curve of the framework steeper. 
+The good is we eventually have a choice. In Angular 1 it was impossible to reach. The was some level you had to use React or other library to render UI instead of Angular templates as it was mainly too slow for greater amount of dynamic data. Now you have a complete solution with much more control over the internal behavior. However this one with combination of other changes made to Angular 2 makes the learning curve of the framework steeper.
