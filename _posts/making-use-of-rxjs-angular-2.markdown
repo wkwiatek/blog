@@ -36,7 +36,7 @@ Recently on Auth0 blog you could see the introduction to RxJS which I strongly r
 RxJS is all about streams, operators to modify them and observables.
 
 ### Functional Reactive Programming
-FRP have recently became a buzzword. To give you a deeper understanding on that topic there is awesome post from Andre Stalz - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754). What you should know from this comprehensive post? Reactive programming is actually programming with asynchronous data streams. Like RxJS streams. But where comes the word *functional*? Functional is about how we can modify these streams and create another. Stream can be used as an input to another stream. We have bunch of operators in RxJS to do things like this. So, can we do some of FRP with RxJS? The short answer is: yes! And we'll do so with Angular 2.
+FRP have recently became a buzzword. To give you a deeper understanding on that topic there is awesome post from Andre Stalz - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754). What you should know from this comprehensive post? Reactive programming is actually programming with asynchronous data streams. Like RxJS streams. But where comes the word *functional*? Functional is about how we can modify these streams and create another. A stream can be used as an input to another stream. We have a bunch of operators in RxJS to do things like this. So, can we do some of FRP with RxJS? The short answer is: yes! And we'll do so with Angular 2.
 
 ## Angular 2 and RxJS
 When we want to start playing with RxJS in Angular, all we need to do is add operators we want to use. The RxJS itself is Angular dependency so it's just ready to use.
@@ -48,7 +48,7 @@ We are about to start with some observables created ad hoc. Let's create an obse
 const items = Observable.of([1, 2, 3])
 ```
 
-Now we can use created observable as component's property and pass it into the view. Angular 2 introduced new filter which will be a perfect fit here. It's called `async`. Its purpose is to unwrap promises and observables. In case of observable it'll pass last value of the observable:
+Now we can use the created observable as component's property and pass it into the view. Angular 2 introduced a new filter which will be a perfect fit here. It's called `async`. Its purpose is to unwrap promises and observables. In case of observable it'll pass last value of the observable:
 
 
 ```ts
@@ -75,7 +75,7 @@ We should see a list of elements in the browser.
 This is our *hello world* example to see how the `async` works and what can we use it for.
 
 ### Http
-Angular 2 relies on RxJS in some of the internal features. One of most known is the *Http* service. In AngularJS it was a promise-based service, now it's an observable-based one. It means we can also make use of async pipe here. Let's try to make real-world example with service now. What we want to achieve is to fetch list of repose for the Auth0 user:
+Angular 2 relies on RxJS in some of the internal features. One of most known is the *Http* service. In Angular 1.x, it was a promise-based service, now it's an observable-based one. It means we can also make use of async pipe here. Let's try to make real-world example with service now. What we want to achieve is to fetch list of repose for the Auth0 user:
 
 ```ts
 import { Injectable } from '@angular/core'
@@ -95,7 +95,7 @@ export class RepoService {
 }
 ```
 
-Here we have the service which expose `getReposForUser` method to make an http call. Note the return type of the method - it's an `Observable<any>`. Now we can add it into the module and use it in the component:
+Here we have the service which exposes the `getReposForUser` method to make an http call. Note the return type of the method - it's an `Observable<any>`. Now we can add it into the module and use it in the component:
 
 ```ts
 @Component({
@@ -155,7 +155,7 @@ export class AppComponent {
 
 Now you'll be able to see 3 calls. You can now see one more thing - `async` makes a subscription under the hood.
 
-On the other hand we have **hot** observables. The difference is, no matter what is the subscribers number, it's fired just once. And we can make our observable hot instead of cold by using `share` operator:
+On the other hand we have **hot** observables. The difference is, no matter what the subscribers number is, it's fired just once. And we can make our observable hot instead of cold by using `share` operator:
 
 ```ts
 // ...
@@ -239,10 +239,10 @@ export class AppComponent {
 }
 ```
 
-What's the most important here, *we define how that clicks stream will behave while declaring the variable*. We say that we don't really need clicks but only sum of them with some prepended text. It's our stream, not the pure click events. And we subscribe to the stream of summed values, not the original ones. In other words, *the key of functional programming is to make code declarative, not imperative*
+What's the most important here, *we define how that clicks stream will behave while declaring the variable*. We say that we don't really need clicks but only the sum of them with some prepended text. It's our stream, not the pure click events. And we subscribe to the stream of summed values, not the original ones. In other words, *the key of functional programming is to make code declarative, not imperative*
 
 ### Comunication between components
-There is one more thing there's worth to spend some time on. It's actually about dumb components in RxJS approach of Angular world. Last time I described the [change detection of Angular 2]() and what can we with it to fine-tune the app. Actually, what we'll just add to our code is the component which will use our `clicks$` stream as the input.
+There is one more thing that is worth to spend some time on. It's actually about dumb components in RxJS approach of Angular world. Last time I described the [change detection of Angular 2]() and what we can do with it to fine-tune the app. Actually, what we'll just add to our code is the component which will use our `clicks$` stream as the input.
 
 ```ts
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
@@ -257,7 +257,7 @@ export class ScoreComponent {
 }
 ```
 
-Note that the component has `ChangeDetectionStrategy.OnPush` turned on so it means we assume the new reference will come as the input. Also there's nothing about streams here in the component. Just number as the input. How to make it happen on the other side? There's the `async` pipe once again:
+Note that the component has `ChangeDetectionStrategy.OnPush` turned on, so it means we assume the new reference will come as the input. Also there's nothing about streams here in the component. Just number as the input. How to make it happen on the other side? There's the `async` pipe once again:
 
 ```ts
 @Component({
