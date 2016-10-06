@@ -275,7 +275,145 @@ export class AppComponent {
 }
 ```
 
+### Forms
+Another place when you can use a power of RxJS are forms. Actually we can use all the knowledge we gained up to this point and see how we can create reactive login form.
+
+First, let's start with adding `ReactiveFormsModule` from `@angular/forms` to the module. Then we can make use of the reactive forms introduced in Angular 2. Here's how it can look like:
+
+```ts
+import { FormBuilder, FormGroup } from '@angular/forms'
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <form
+      [formGroup]="loginForm"
+    >
+      <label>Login:</label>
+      <input
+        formControlName="login"
+        type="text"
+      >
+
+      <label>Password:</label>
+      <input
+        formControlName="password"
+        type="password"
+      >
+
+      <button type="submit">Submit</button>
+    </form>
+  `,
+})
+export class AppComponent implements OnInit {
+  public loginForm: FormGroup
+
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+      login: '',
+      password: '',
+    })
+  }
+}
+```
+
+We do have now few additional blocks:
+- `formControlName` - added to match names from templates to the appropriate fields in the controller
+- `formBuilder.group` - creates the form
+- `[formGroup]` - connects the template and the controller
+
+What are we able to do know? We can use e.g. `valueChanges` stream:
+
+```ts
+// ...
+    this.loginForm.valueChanges.subscribe(console.log.bind(console))
+// ...
+```
+
+Now each changed field will emit an event and will be logged to the console. It gives a lot of possibilites as we can any operator RxJS provides. In this example let's focus on submitting the form reactive way. We can put `(submit)` on the form:
+
+```ts
+@Component({
+  selector: 'my-app',
+  template: `
+    <form
+      [formGroup]="loginForm"
+      (submit)="submit$.next()"
+    >
+    <!-- ... -->
+  `
+})
+// ...
+export class AppComponent {
+  public loginForm: FormGroup
+  private submit$: Observable<any> = new Subject()
+
+// ...
+```
+
+Ok, so we do have a stream of submit events and stream of values. All that actually remained is to combine this streams together to have one stream which emits current state of fields when form is submitted. Desired bahavior can be achieved by using `withLatestFrom` operator of RxJS. The combined stream is as follows:
+
+```ts
+// ...
+    this.submit$
+      .withLatestFrom(this.loginForm.valueChanges, (_, values) => values)
+      .subscribe(values => {
+        console.log('submitted values', values)
+      })
+// ...
+```
+
+And it's done! We know have combined streams which gave us the feature we wanted. Look once again - now the logic is in one place and it could be written in one (quite long but) line. Just to recap, here is the final code for the form component:
+
+```ts
+@Component({
+  selector: 'my-app',
+  template: `
+    <form
+      [formGroup]="loginForm"
+      (submit)="submit$.next()"
+    >
+      <label>Login:</label>
+      <input
+        formControlName="login"
+        type="text"
+      >
+
+      <label>Password:</label>
+      <input
+        formControlName="password"
+        type="password"
+      >
+
+      <button type="submit">Submit</button>
+    </form>
+  `,
+})
+export class AppComponent {
+  public loginForm: FormGroup
+  private submit$: Observable<any> = new Subject()
+
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+      login: '',
+      password: '',
+    })
+
+    this.submit$
+      .withLatestFrom(this.loginForm.valueChanges, (_, values) => values)
+      .subscribe(values => {
+        console.log('submitted values', values)
+      })
+  }
+}
+```
+
 ## Conclusion
-### Maintainability
-### Is it worth?
+Angular 2 has a lot more features than meets the eye on a first contact. RxJS is, in my personal opinion, one of the best of them. It can rocket the app to the next level in term of maintainability and clarity. The future is more declarative, less imperative code.
+
+The big problem of RxJS is its entry threshold which can discourage at first. Also a bunch of operators and their slight difference can frustrate at the beginning. But after making few steps with familiarizng with RxJS it turns out it's not so complicated at all. You have to set your mind to a different thinking. But it'll pay you back.
 
