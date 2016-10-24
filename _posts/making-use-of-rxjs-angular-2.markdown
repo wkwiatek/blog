@@ -30,15 +30,14 @@ related:
 
 ---
 
-Recently on Auth0 blog you could see the introduction to RxJS which I strongly recommend before taking this one. You can go directly to the [article](https://auth0.com/blog/understanding-reactive-programming-and-rxjs/) and then go back!
+If you're new to RxJS, I recommend reading [Understanding Reactive Programming and RxJS](https://auth0.com/blog/understanding-reactive-programming-and-rxjs/) before proceeding.
 
-## Introduction
-RxJS is all about streams, operators to modify them and observables.
+RxJS is all about streams, operators to modify them, and observables.
 
-### Functional Reactive Programming
+## Functional Reactive Programming
 FRP have recently became a buzzword. To give you a deeper understanding on that topic there is awesome post from Andre Stalz - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754). What you should know from this comprehensive post? Reactive programming is actually programming with asynchronous data streams. Like RxJS streams. But where comes the word *functional*? Functional is about how we can modify these streams and create another. A stream can be used as an input to another stream. We have a bunch of operators in RxJS to do things like this. So, can we do some of FRP with RxJS? The short answer is: yes! And we'll do so with Angular 2.
 
-## Angular 2 and RxJS
+## RxJS in Angular 2
 When we want to start playing with RxJS in Angular, all we need to do is add operators we want to use. The RxJS itself is Angular dependency so it's just ready to use.
 
 ### Passing observables to the view
@@ -75,7 +74,7 @@ We should see a list of elements in the browser.
 This is our *hello world* example to see how the `async` works and what can we use it for.
 
 ### Http
-Angular 2 relies on RxJS in some of the internal features. One of most known is the *Http* service. In Angular 1.x, it was a promise-based service, now it's an observable-based one. It means we can also make use of async pipe here. Let's try to make real-world example with service now. What we want to achieve is to fetch list of repose for the Auth0 user:
+Angular 2 relies on RxJS in some of the internal features. One of the most well-known services is *Http*. In Angular 1.x, *Http* was a promise-based service. In Angular 2, it's based on observables. It means we can also make use of async pipe here. Let's try to make real-world example with service now. We want to fetch a list of repos authored by Auth0 on GitHub:
 
 ```ts
 import { Injectable } from '@angular/core'
@@ -114,7 +113,7 @@ export class AppComponent {
 }
 ```
 
-Now something important has just happened. You can take a look into the *Network* tab of your developer tools in the browser. No call was made. But let's add the for loop with async pipe:
+Now something important has just happened. You can take a look into the *Network* tab of your developer tools in the browser. No call was made. Let's add the `for` loop with `async` pipe:
 
 ```ts
 @Component({
@@ -136,10 +135,10 @@ export class AppComponent {
 }
 ```
 
-Now it's fired and prints the repos correctly. Why is that?
+Now the call for repositories is fired and we can see the list of repos fetched correctly. Why is that?
 
-#### Hot and cold observables
-Above example shows the observable which is an `http.get` is **cold**. What does it mean? Each subscriber sees the same events from the beginning as it would just start. It's independent of any other subscriber. It also means if there's no subscriber, no value is emitted! See this one in action:
+## Hot and cold observables
+The `http.get` observable above is **cold**: that means each subscriber sees the same events from the beginning. It's independent of any other subscriber. It also means if there's no subscriber, no value is emitted! See this one in action:
 
 ```ts
 export class AppComponent {
@@ -155,7 +154,7 @@ export class AppComponent {
 
 Now you'll be able to see 3 calls. You can now see one more thing - `async` makes a subscription under the hood.
 
-On the other hand we have **hot** observables. The difference is, no matter what the subscribers number is, it's fired just once. And we can make our observable hot instead of cold by using `share` operator:
+On the other hand we have **hot** observables. The difference is, no matter what the subscribers number is, the observable starts just once. And we can make our observable hot instead of cold by using `share` operator:
 
 ```ts
 // ...
@@ -174,10 +173,12 @@ export class RepoService {
 }
 ```
 
-Now you should see just one call.
+Now you should see just one call. If you want to go deeper with the topic, here is the [Hot vs Cold Observables article by Ben Lesh](http://medium.com/@benlesh/hot-vs-cold-observables-f8094ed53339).
+
+## Programming the reactive way in Angular 2
 
 ### Handling events
-We've just covered the case you've probably used RxJS observables (even if you were not aware of that). But there are more things to do with streams even if Angular doesn't require you to do so. Now we move on to the *on click* events. The traditional, imperative way of handling click events in Angular 2 is as follows:
+We've covered how you've probably used RxJS observables for Http in Angular 2 even if you weren't aware of it. However, there are more things to do with streams even if Angular doesn't require you to do so. Now we move on to the *on click* events. The traditional, imperative way of handling click events in Angular 2 is as follows:
 
 ```ts
 @Component({
@@ -195,7 +196,7 @@ export class AppComponent {
 }
 ```
 
-But we can create a stream of click events using RxJS `Subject`. *Subject* is observer and observable at once. It means it can emit value (using `.next()`) and you can subscribe to it (using `subscribe`).
+We can create a stream of click events using RxJS `Subject`. *Subject* is observer and observable at once. It means it can emit value (using `.next()`) and you can subscribe to it (using `subscribe`).
 
 Here you can see the same case achieved with functional approach using RxJS:
 
@@ -217,7 +218,7 @@ export class AppComponent {
 }
 ```
 
-It's not such much different though. But let's try to add some more logic there. Like making sum of clicks and printing some text instead of just number.
+It's not such much different though. Let's try to add some more logic there. Like making sum of clicks and printing some text instead of just number.
 
 ```ts
 @Component({
@@ -239,10 +240,10 @@ export class AppComponent {
 }
 ```
 
-What's the most important here, *we define how that clicks stream will behave while declaring the variable*. We say that we don't really need clicks but only the sum of them with some prepended text. It's our stream, not the pure click events. And we subscribe to the stream of summed values, not the original ones. In other words, *the key of functional programming is to make code declarative, not imperative*
+The key point is that *we define how the clicks stream will behave*. We say that we don't really need clicks but only the sum of them with some prepended text. It's our stream, not the pure click events. And we subscribe to the stream of summed values, not the original ones. In other words, *the key of functional programming is to make code declarative, not imperative*
 
-### Comunication between components
-There is one more thing that is worth to spend some time on. It's actually about dumb components in RxJS approach of Angular world. Last time I described the [change detection of Angular 2]() and what we can do with it to fine-tune the app. Actually, what we'll just add to our code is the component which will use our `clicks$` stream as the input.
+### Communication between components
+Let's briefly address communication between Angular components using an RxJS approach. It's actually about dumb components in RxJS approach of Angular world. Last time I described the [change detection of Angular 2](https://auth0.com/blog/understanding-angular-2-change-detection/) and what we can do with it to fine-tune the app. We'll add the component with `clicks$` stream as the input.
 
 ```ts
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
@@ -257,7 +258,7 @@ export class ScoreComponent {
 }
 ```
 
-Note that the component has `ChangeDetectionStrategy.OnPush` turned on, so it means we assume the new reference will come as the input. Also there's nothing about streams here in the component. Just number as the input. How to make it happen on the other side? There's the `async` pipe once again:
+Note that the component has `ChangeDetectionStrategy.OnPush` turned on, so it means we assume the new reference will come as the input. The component accepts a numeric parameter but there is no reference to streams. We can handle this with the `async` pipe:
 
 ```ts
 @Component({
@@ -276,7 +277,7 @@ export class AppComponent {
 ```
 
 ### Forms
-Another place when you can use a power of RxJS are forms. Actually we can use all the knowledge we gained up to this point and see how we can create reactive login form.
+Another place when you can use a power of RxJS are forms. We can use all the knowledge we gained up to this point and see how we can create reactive login form.
 
 First, let's start with adding `ReactiveFormsModule` from `@angular/forms` to the module. Then we can make use of the reactive forms introduced in Angular 2. Here's how it can look like:
 
@@ -319,12 +320,12 @@ export class AppComponent implements OnInit {
 }
 ```
 
-We do have now few additional blocks:
+We now have few additional blocks:
 - `formControlName` - added to match names from templates to the appropriate fields in the controller
 - `formBuilder.group` - creates the form
 - `[formGroup]` - connects the template and the controller
 
-What are we able to do know? We can use e.g. `valueChanges` stream:
+We can now use the `valueChanges` observable:
 
 ```ts
 // ...
@@ -332,7 +333,7 @@ What are we able to do know? We can use e.g. `valueChanges` stream:
 // ...
 ```
 
-Now each changed field will emit an event and will be logged to the console. It gives a lot of possibilites as we can any operator RxJS provides. In this example let's focus on submitting the form reactive way. We can put `(submit)` on the form:
+Now each changed field will emit an event and will be logged to the console. This offers many possibilities since we can take advantage of any operator RxJS provides. In this example let's focus on submitting the form reactive way. We can put `(submit)` on the form:
 
 ```ts
 @Component({
@@ -353,7 +354,7 @@ export class AppComponent {
 // ...
 ```
 
-Ok, so we do have a stream of submit events and stream of values. All that actually remained is to combine this streams together to have one stream which emits current state of fields when form is submitted. Desired bahavior can be achieved by using `withLatestFrom` operator of RxJS. The combined stream is as follows:
+We now have a stream of submit events and a stream of values. All that remains is to combine these streams. The resulting stream will emit the current state of the fields when the form is submitted. Desired bahavior can be achieved by using [withLatestFrom](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-withLatestFrom) operator of RxJS. The combined stream is as follows:
 
 ```ts
 // ...
@@ -365,7 +366,7 @@ Ok, so we do have a stream of submit events and stream of values. All that actua
 // ...
 ```
 
-And it's done! We know have combined streams which gave us the feature we wanted. Look once again - now the logic is in one place and it could be written in one (quite long but) line. Just to recap, here is the final code for the form component:
+We now have combined streams and the logic is consolidated. It can be written in a single line. Just to recap, here is the final code for the form component:
 
 ```ts
 @Component({
@@ -413,7 +414,6 @@ export class AppComponent {
 ```
 
 ## Conclusion
-Angular 2 has a lot more features than meets the eye on a first contact. RxJS is, in my personal opinion, one of the best of them. It can rocket the app to the next level in term of maintainability and clarity. The future is more declarative, less imperative code.
+Angular 2 has a lot more features than meets the eye. RxJS is, in my personal opinion, one of the best of them. It can rocket the app to the next level in term of maintainability and clarity. The future is more declarative, less imperative code.
 
-The big problem of RxJS is its entry threshold which can discourage at first. Also a bunch of operators and their slight difference can frustrate at the beginning. But after making few steps with familiarizng with RxJS it turns out it's not so complicated at all. You have to set your mind to a different thinking. But it'll pay you back.
-
+RxJS can appear intimidating at first, but once you’re familiar with its functionality and operators, it supplies many benefits (as defining logic at declaration time) which all ends up with saying: the code is easier to reason about. RxJS requires a different mode of thinking, but is very worthwhile to learn and use.
