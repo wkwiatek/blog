@@ -183,6 +183,197 @@ You can try it on a [plunker now](http://embed.plnkr.co/d9b07qginx7z9hGYyeME/) a
 ### App Structure
 How can we build app to make most performant one? With Angular 2 is actually quite easy idea. As in all of the component frameworks nowadays you should have dumb and smart components. These dumb components which are meant to be only for displaying data from the input or handling user events are ideal volunteers for having the `OnPush` strategy. On the other hand smart components will sometimes require to watch for more things than the input and the events so be careful with setting the `OnPush` strategy everywhere.
 
+## Aside: Angular 2 Authentication with Auth0
+
+Auth0 issues JSON Web Tokens on every login for your users. That means that you can have a solid identity infrastructure, including single sign-on, user management, support for social (Facebook, Github, Twitter, etc.), enterprise (Active Directory, LDAP, SAML, etc.) and your own database of users with just a few lines of code.
+
+You can add Auth0 to an Angular 2 app really easily. There are just a few simple steps:
+
+### Step 0: Sign Up for Auth0 and Configure
+
+If you don't already have any Auth0 account, [sign up](https://auth0.com/signup) for one now to follow along with the other steps.
+
+### Step 1: Add Auth0Lock to Your App
+
+[Lock](https://auth0.com/lock) is the beautiful (and totally customizable) login box widget that comes with Auth0. The script for it can be brought in from a CDN link or with npm.
+
+> Note: If you use npm to get Auth0Lock, you will need to include it in your build step.
+
+```html
+  <!-- src/client/index.html -->
+
+  ...
+
+  <!-- Auth0 Lock script -->
+  <script src="https://cdn.auth0.com/js/lock-9.0.min.js"></script>
+
+  <!-- Setting the right viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  ...
+```
+
+### Step 2: Add an Authentication Service
+
+It's best to set up an injectable service for authentication that can be used across the application.
+
+With Auth0, we get access to the user's profile and JWT in the `lock.show` callback and these items can be saved in local storage for use later.
+
+```js
+// src/client/shared/auth.service.ts
+
+import {Injectable, NgZone} from 'angular2/core';
+import {Router} from 'angular2/router';
+import {AuthHttp, tokenNotExpired} from 'angular2-jwt';
+
+// Avoid name not found warnings
+declare var Auth0Lock: any;
+
+@Injectable()
+export class AuthService {
+  lock = new Auth0Lock('YOUR_AUTH0_CLIENT_ID', 'YOUR_AUTH0_DOMAIN');
+  refreshSubscription: any;
+  user: Object;
+  zoneImpl: NgZone;
+
+  constructor(private authHttp: AuthHttp, zone: NgZone, private router: Router) {
+    this.zoneImpl = zone;
+    this.user = JSON.parse(localStorage.getItem('profile'));
+
+    // Add callback for lock `authenticated` event
+    this.lock.on("authenticated", authResult => {
+      self.lock.getProfile(authResult.idToken, (error, profile) => {
+
+        if (error) {
+          // handle error
+          return;
+        }
+
+        // If authentication is successful, save the items
+        // in local storage
+        localStorage.setItem('profile', JSON.stringify(profile));
+        localStorage.setItem('id_token', authResult.idToken);
+        this.zoneImpl.run(() => self.user = profile);
+      });
+    });
+  }
+
+  public authenticated() {
+    // Check if there's an unexpired JWT
+    return tokenNotExpired();
+  }
+
+  public login() {
+    // Show the Auth0 Lock widget
+    this.lock.show();
+  }
+
+  public logout() {
+    localStorage.removeItem('profile');
+    localStorage.removeItem('id_token');
+    this.zoneImpl.run(() => this.user = null);
+    this.router.navigate(['Home']);
+  }
+}
+```
+
+### Step 3: Add a Click Handler to Login
+
+To be able to use the "Login" and "Logout" methods, we need to inject the Auth service in the app.components.ts file.
+
+```html
+<!-- src/client/app.components.ts -->
+import { Component } from '@angular/core';
+import { AuthService } from './auth.service';
+
+...
+```
+
+In your root NgModule, declare the service provider, as shown in the following code.
+
+```js
+<!-- src/client/app.module.ts -->
+
+...
+import { AuthService } from './auth.service';
+
+@NgModule({
+ imports: [
+   BrowserModule,
+   FormsModule,
+   routing,
+   HttpModule
+ ],
+ declarations: [
+   AppComponent
+ ],
+ providers: [
+   AUTH_PROVIDERS,
+   AuthService
+ ],
+ bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+Now, we can use the methods from our authentication service in any of our components which means we can easily add a click handler to a "Login" and "Logout" button.
+
+```html  
+<!-- src/client/app.component.ts -->
+
+  ...
+
+  <button (click)="authService.login()" *ngIf="!authService.authenticated()">Log In</button>
+  <button (click)="authService.logout()" *ngIf="authService.authenticated()">Log Out</button>
+
+  ...
+```
+
+Once the user logs in, a [JSON Web Token](https://jwt.io/introduction) will be saved for them in local storage. This JWT can then be used to make authenticated HTTP requests to an API.
+
+### Step 4: Make Authenticated HTTP Requests
+
+With [**anuglar2-jwt**](https://github.com/auth0/angular2-jwt), we can automatically have our JWTs sent in HTTP requests. To do so, we need to inject and use `AuthHttp`.
+
+```js
+// src/client/ping/ping.component.ts
+
+import {Component} from 'angular2/core';
+import {Http} from 'angular2/http';
+
+import {AuthHttp} from 'angular2-jwt';
+import {Auth} from './auth.service';
+import 'rxjs/add/operator/map';
+
+@Component({
+  selector: 'ping',
+  template: `
+    <h1>Send a Ping to the Server</h1>
+    <button class="btn btn-primary" (click)="securedPing()" *ngIf="auth.authenticated()">Secured Ping</button>
+    <h2>{{message}}</h2>
+  `
+})
+export class Ping {
+  API_URL: string = 'http://localhost:3001';
+  message: string;
+
+  constructor(private http: Http, private authHttp: AuthHttp, private auth: Auth) {}
+
+  securedPing() {
+    this.authHttp.get(`${this.API_URL}/secured/ping`)
+      .map(res => res.json())
+      .subscribe(
+        data => this.message= data.text,
+        error => this.message = error._body
+      );
+  }
+}
+```
+
+### Step 5: Done!
+
+That's all there is to it to add authentication to your Angular 2 app with Auth0!
+
 ## Conclusion
 
 ### Performance can increase a lot
